@@ -3,7 +3,7 @@ require Pathname(__FILE__).dirname.expand_path.parent + 'spec_helper'
 
 if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
   describe 'DataMapper::Timestamp' do
-    describe "Timestamp (shared behavior)", :shared => true do
+    describe "Timestamp (shared behavior)", :shared => true do            
       it "should not set the created_at/on fields if they're already set" do
         repository(:default) do
           green_smoothie = GreenSmoothie.new(:name => 'Banana')
@@ -41,6 +41,13 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
           green_smoothie.save
           green_smoothie.created_at.should eql(original_created_at)
           green_smoothie.created_on.should eql(original_created_on)
+        end
+      end
+
+      it "should not require the created_at/on fields" do
+        repository(:default) do
+          GreenSmoothie.created_at.nullable?.should be_true
+          GreenSmoothie.created_on.nullable?.should be_true
         end
       end
 
@@ -87,6 +94,11 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
           green_smoothie.updated_at.should eql(original_updated_at)
           green_smoothie.updated_on.should eql(original_updated_on)
         end
+      end
+      
+      it "should not require the updated_at/on fields" do
+        GreenSmoothie.updated_at.nullable?.should be_true
+        GreenSmoothie.updated_on.nullable?.should be_true
       end
     end
 
